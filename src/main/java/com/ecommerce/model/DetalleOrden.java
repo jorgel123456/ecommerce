@@ -1,18 +1,54 @@
 package com.ecommerce.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="detalles")
+
 public class DetalleOrden {
-	
-	private Integer id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String nombre;
 	private double cantidad;
 	private double precio;
 	private double total;
 	
+	
+	@OneToOne
+	private Orden orden;
+	
+	@ManyToOne
+	private Producto producto;
+	
+	
+	public Orden getOrden() {
+		return orden;
+	}
+
+	public void setOrden(Orden orden) {
+		this.orden = orden;
+	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+
 	public DetalleOrden() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public DetalleOrden(Integer id, String nombre, double cantidad, double precio, double total) {
+	public DetalleOrden(Long id, String nombre, double cantidad, double precio, double total) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -21,11 +57,11 @@ public class DetalleOrden {
 		this.total = total;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
