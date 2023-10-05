@@ -3,7 +3,7 @@
   <div th:fragment="header">
 	  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="#">ECommerce MaluStore</a>
+      <a class="navbar-brand" th:href="@{/administrador}">ECommerce MaluStore</a>
 
       <form class="form-inline my-2 my-lg-0" method="post"
       action="#">
@@ -19,10 +19,15 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item"><a class="nav-link"
-          href="carrito.html">Carrito</a></li>
-          <li class="nav-item"><a class="nav-link"
-            href="login.html">Login</a></li>
+        	<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" 
+				   id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+				   aria-haspopup="true" aria-expanded="false"> ADMIN 
+				</a>
+				<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+					<a class="dropdown-item" th:href="@{/productos}">Productos</a> 
+				</div>
+			</li>
           </ul>
         </div>
       </div>
@@ -30,10 +35,10 @@
   </div>
   
     <!-- Footer -->
-    <div th:frament="footer">
+    <div th:fragment="footer">
 		<footer class="py-5 bg-dark">
       		<div class="container">
-        		<p class="m-0 text-center text-white">Copyright &copy; ECommerce MaluStore 2023</p>
+        		<p class="m-0 text-center text-white">Copyright &copy; Sistemas Ventas  2023</p>
       		</div>_
       <!-- /.container -->
     	</footer>
