@@ -1,6 +1,7 @@
 package com.ecommerce.controller;
 
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.slf4j.*;
@@ -11,10 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ecommerce.model.Producto;
 import com.ecommerce.model.Usuario;
 import com.ecommerce.service.ProductoService;
+import com.ecommerce.service.UploadfileService;
 
 @Controller
 @RequestMapping("/productos")
@@ -24,7 +28,7 @@ public class ProductoController {
 	
 	@Autowired
 	private ProductoService productoService;
-	
+	private UploadfileService upload;
 	
 	/* Llamado a la tabla con datos productos, formulario y metodo de crear productos */
 	 
@@ -40,10 +44,17 @@ public class ProductoController {
 	}
 	
 	@PostMapping("/save")
-	public String save(Producto producto) {
+	public String save(Producto producto, @RequestParam("img") MultipartFile file) throws IOException{
 		LOGGER.info("Este es el objeto producto {}", producto);
 		Usuario u=new Usuario(1,"","","","","","","");
 		producto.setUsuario(u);
+		
+		if(producto.getId()==null) {
+			String nombreImage=upload.saveImage(file);
+			producto.setImagen(nombreImage);
+		}
+		
+		
 		productoService.save(producto);
 		return "redirect:/productos";
 	}
@@ -70,4 +81,7 @@ public class ProductoController {
 		productoService.delete(id);
 		return "redirect:/productos";
 	}
+	
+	/**/
+	
 }
