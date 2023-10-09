@@ -2,6 +2,7 @@ package com.ecommerce.controller;
 
 
 import java.io.IOException;
+
 import java.util.Optional;
 
 import org.slf4j.*;
@@ -28,6 +29,7 @@ public class ProductoController {
 	
 	@Autowired
 	private ProductoService productoService;
+	@Autowired
 	private UploadfileService upload;
 	
 	/* Llamado a la tabla con datos productos, formulario y metodo de crear productos */
@@ -49,12 +51,10 @@ public class ProductoController {
 		Usuario u=new Usuario(1,"","","","","","","");
 		producto.setUsuario(u);
 		
-		if(producto.getId()==null) {
+		if(producto.getId()==null) {//cuando se crea un producto
 			String nombreImage=upload.saveImage(file);
 			producto.setImagen(nombreImage);
-		}
-		
-		
+		}		
 		productoService.save(producto);
 		return "redirect:/productos";
 	}
@@ -71,13 +71,43 @@ public class ProductoController {
 		return "productos/edit";
 	}
 	@PostMapping("/update")
-	public String update(Producto producto) {
-		productoService.update(producto);
+	public String update(Producto producto, @RequestParam("img") MultipartFile file) throws IOException {
+	
+		Producto p=new Producto();
+		p=productoService.get(producto.getId()).get();
+		
+		if(file.isEmpty()) {
+
+			producto.setImagen(p.getImagen());
+			
+		}else {//cuado se edita tabie la imagen
+			
+	
+			//elimina cuando no sea la image por defecto
+			if (!p.getImagen().equals("default.jpg")) {
+				upload.deleteImage(p.getImagen());
+			}
+			
+			String nombreImage=upload.saveImage(file);
+			producto.setImagen(nombreImage);
+		}
+	producto.setUsuario(p.getUsuario());
+	productoService.update(producto);
 	return "redirect:/productos";
 	}
+	
+	
 	/* metodo para eliminar un producto */
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Integer id) {
+		
+		Producto p=new Producto();
+		p=productoService.get(id).get();
+		//elimina cuando no sea la image por defecto
+		if (!p.getImagen().equals("default.jpg")) {
+			upload.deleteImage(p.getImagen());
+		}
+		
 		productoService.delete(id);
 		return "redirect:/productos";
 	}
